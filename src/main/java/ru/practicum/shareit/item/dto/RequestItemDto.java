@@ -4,14 +4,9 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-/**
- * TODO Sprint add-controllers.
- */
 @AllArgsConstructor
 @Data
-public class ItemDto {
-
-    private int id;
+public class RequestItemDto {
     @NotBlank
     private String name;
     @NotBlank
@@ -20,3 +15,4 @@ public class ItemDto {
 
 
 }
+
