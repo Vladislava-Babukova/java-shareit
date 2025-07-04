@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.user.dto.CreateUserDto;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 
@@ -19,13 +20,13 @@ public class UserController {
     private final UserMapper userMapper;
 
     @GetMapping("/{userId}")
-    public User get(@PathVariable int userId) {
-        return userService.get(userId);
+    public UserDto get(@PathVariable int userId) {
+        return userMapper.toDto(userService.get(userId));
     }
 
     @PostMapping
-    public User create(@Valid @RequestBody User user) {
-        return userService.create(user);
+    public CreateUserDto create(@Valid @RequestBody CreateUserDto crUser) {
+        return userMapper.toCreateDto(userService.create(userMapper.toUser(crUser)));
     }
 
 

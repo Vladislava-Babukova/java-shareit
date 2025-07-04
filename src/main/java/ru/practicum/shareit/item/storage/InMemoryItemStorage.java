@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @Component
 public class InMemoryItemStorage implements ItemStorage {
 
-    Map<Integer, Item> itemMap = new HashMap<>();
+    private Map<Integer, Item> itemMap = new HashMap<>();
 
     @Override
     public Item create(Item item) {
