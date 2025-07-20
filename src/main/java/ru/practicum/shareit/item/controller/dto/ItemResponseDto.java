@@ -1,22 +1,21 @@
-package ru.practicum.shareit.item.model;
+package ru.practicum.shareit.item.controller.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import ru.practicum.shareit.user.model.User;
 
-/**
- * TODO Sprint add-controllers.
- */
+import java.util.List;
+
 @AllArgsConstructor
 @Data
-public class Item {
+public class ItemResponseDto {
     private int id;
     @NotBlank
     private String name;
     @NotBlank
     private String description;
-    private User owner;
     private Boolean available;
-    private Integer request;
+    private ForTimeBookingDto lastBooking;
+    private ForTimeBookingDto nextBooking;
+    private List<CommentResponseDto> comments;
 }
