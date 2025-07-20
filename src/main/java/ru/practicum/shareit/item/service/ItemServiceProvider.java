@@ -76,7 +76,8 @@ public class ItemServiceProvider implements ItemService {
             Item item = repository.findById(itemId).map(mapper::toItem)
                     .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
-            ItemResponseDto responseDto = controllerMapper.toResponse(item, getPastBookings(itemId), getFutureBookings(itemId),
+            ItemResponseDto responseDto = controllerMapper.toResponse(item,
+                    getPastBookings(itemId), getFutureBookings(itemId),
                     getComments(itemId));
             return responseDto;
         } catch (ChangeSetPersister.NotFoundException e) {
@@ -136,8 +137,8 @@ public class ItemServiceProvider implements ItemService {
 
         return repository.findByOwnerId(userId).stream()
                 .map(mapper::toItem)
-                .map(item -> controllerMapper.toResponse(item, getPastBookings(item.getId())
-                        , getFutureBookings(item.getId()), getComments(item.getId())))
+                .map(item -> controllerMapper.toResponse(item, getPastBookings(item.getId()),
+                         getFutureBookings(item.getId()), getComments(item.getId())))
                 .collect(Collectors.toList());
     }
 
