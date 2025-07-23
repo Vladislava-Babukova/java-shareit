@@ -1,8 +1,8 @@
 package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.booking.controller.State;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.booking.storage.entity.BookingEntity;
@@ -18,7 +18,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class BookingServiceProvider implements BookingService {
+public class BookingServiceImpl implements BookingService {
     private final BookingRepositoryMapper mapper;
     private final BookingRepository repository;
     private final UserService userService;
@@ -55,13 +55,9 @@ public class BookingServiceProvider implements BookingService {
 
     @Override
     public Booking get(int id) {
-        try {
-            return repository.findById(id)
-                    .map(mapper::toBooking)
-                    .orElseThrow(ChangeSetPersister.NotFoundException::new);
-        } catch (ChangeSetPersister.NotFoundException e) {
-            throw new DataNotFoundException("Не удалось найти бронь");
-        }
+        return repository.findById(id)
+                .map(mapper::toBooking)
+                .orElseThrow(() -> new DataNotFoundException("Не удалось найти бронь"));
     }
 
 
@@ -72,13 +68,11 @@ public class BookingServiceProvider implements BookingService {
             throw new ValidationException("Изменять статус может только владелец вещи");
         }
         booking.setStatus(approved ? Status.APPROVED : Status.REJECTED);
-        try {
-            BookingEntity entity = repository.findById(bookingId).orElseThrow(ChangeSetPersister.NotFoundException::new);
-            mapper.updateEntity(booking, entity);
-            return mapper.toBooking(repository.save(entity));
-        } catch (ChangeSetPersister.NotFoundException e) {
-            throw new DataNotFoundException("не удалось найти бронь");
-        }
+
+        BookingEntity entity = repository.findById(bookingId)
+                .orElseThrow(() -> new DataNotFoundException("не удалось найти бронь"));
+        mapper.updateEntity(booking, entity);
+        return mapper.toBooking(repository.save(entity));
     }
 
     @Override
@@ -92,22 +86,22 @@ public class BookingServiceProvider implements BookingService {
     }
 
     @Override
-    public List<Booking> getAllBookings(int userId, String state) {
+    public List<Booking> getAllBookings(int userId, State state) {
 
         switch (state) {
-            case "CURRENT":
+            case CURRENT:
                 return mapper.toBookingList(repository.findByBookerIdAndStartBeforeAndEndAfterOrderByStartDesc(
                         userId, LocalDateTime.now(), LocalDateTime.now()));
-            case "PAST":
+            case PAST:
                 return mapper.toBookingList(repository.findByBookerIdAndEndBeforeOrderByStartDesc(
                         userId, LocalDateTime.now()));
-            case "FUTURE":
+            case FUTURE:
                 return mapper.toBookingList(repository.findByBookerIdAndStartAfterOrderByStartDesc(
                         userId, LocalDateTime.now()));
-            case "WAITING":
+            case WAITING:
                 return mapper.toBookingList(repository.findByBookerIdAndStatusOrderByStartDesc(
                         userId, Status.WAITING));
-            case "REJECTED":
+            case REJECTED:
                 return mapper.toBookingList(repository.findByBookerIdAndStatusOrderByStartDesc(
                         userId, Status.REJECTED));
             default:
@@ -116,23 +110,23 @@ public class BookingServiceProvider implements BookingService {
     }
 
     @Override
-    public List<Booking> getAllItemBookings(int userId, String state) {
+    public List<Booking> getAllItemBookings(int userId, State state) {
         User user = userService.get(userId);
         switch (state) {
-            case "CURRENT":
+            case CURRENT:
                 return mapper.toBookingList(repository.findCurrentByOwner(
                         userId, LocalDateTime.now())
                 );
-            case "PAST":
+            case PAST:
                 return mapper.toBookingList(repository.findPastByOwner(
                         userId, LocalDateTime.now()));
-            case "FUTURE":
+            case FUTURE:
                 return mapper.toBookingList(repository.findFutureByOwner(
                         userId, LocalDateTime.now()));
-            case "WAITING":
+            case WAITING:
                 return mapper.toBookingList(repository.findByOwnerAndStatus(
                         userId, Status.WAITING));
-            case "REJECTED":
+            case REJECTED:
                 return mapper.toBookingList(repository.findByOwnerAndStatus(
                         userId, Status.REJECTED));
             default:

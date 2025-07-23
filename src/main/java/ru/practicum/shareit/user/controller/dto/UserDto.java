@@ -3,9 +3,11 @@ package ru.practicum.shareit.user.controller.dto;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@AllArgsConstructor
 @Data
+@AllArgsConstructor
 public class UserDto {
     private int id;
     private String name;

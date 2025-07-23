@@ -1,7 +1,10 @@
 package ru.practicum.shareit.booking.storage.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.item.storage.entity.ItemEntity;
 import ru.practicum.shareit.user.storage.entity.UserEntity;
@@ -11,7 +14,10 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(schema = "public", name = "bookings")
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class BookingEntity implements Serializable {
     @Id
     @SequenceGenerator(name = "pk_sequence", schema = "public", sequenceName = "bookings_id_seq", allocationSize = 1)

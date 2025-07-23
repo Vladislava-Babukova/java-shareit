@@ -53,7 +53,8 @@ public class BookingController {
     public List<BookingResponseDto> getAllBookings(
             @RequestHeader("X-Sharer-User-Id") int userId,
             @RequestParam(name = "state", defaultValue = "ALL") String state) {
-        List<Booking> bookingList = service.getAllBookings(userId, state);
+        State bookingstate = State.from(state);
+        List<Booking> bookingList = service.getAllBookings(userId, bookingstate);
         return mapper.toResponseList(bookingList);
     }
 
@@ -61,7 +62,8 @@ public class BookingController {
     public List<BookingResponseDto> getAllItemBookings(
             @RequestHeader("X-Sharer-User-Id") int owner,
             @RequestParam(name = "state", defaultValue = "ALL") String state) {
-        List<Booking> bookingList = service.getAllItemBookings(owner, state);
+        State bookingstate = State.from(state);
+        List<Booking> bookingList = service.getAllItemBookings(owner, bookingstate);
         return mapper.toResponseList(bookingList);
     }
 }

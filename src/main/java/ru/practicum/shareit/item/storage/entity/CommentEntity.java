@@ -1,14 +1,20 @@
 package ru.practicum.shareit.item.storage.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ru.practicum.shareit.user.storage.entity.UserEntity;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(schema = "public", name = "comments")
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class CommentEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

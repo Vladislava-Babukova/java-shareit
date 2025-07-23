@@ -1,7 +1,6 @@
 package ru.practicum.shareit.user.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exceptions.DataNotFoundException;
 import ru.practicum.shareit.exceptions.StorageException;
@@ -12,7 +11,7 @@ import ru.practicum.shareit.user.storage.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceProvider implements UserService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository repository;
     private final UserRepositoryMapper mapper;
@@ -29,25 +28,18 @@ public class UserServiceProvider implements UserService {
 
     @Override
     public User update(User user, int id) {
-        try {
-            UserEntity entity = repository.findById(id)
-                    .orElseThrow(NotFoundException::new);
-            mapper.updateEntity(user, entity);
-            return mapper.toUser(repository.save(entity));
-        } catch (NotFoundException e) {
-            throw new DataNotFoundException("Не удалось найти пользователя");
-        }
+        UserEntity entity = repository.findById(id)
+                .orElseThrow(() -> new DataNotFoundException("Не удалось найти пользователя"));
+        mapper.updateEntity(user, entity);
+        return mapper.toUser(repository.save(entity));
+
     }
 
     @Override
     public User get(int id) {
-        try {
-            return repository.findById(id)
-                    .map(mapper::toUser)
-                    .orElseThrow(NotFoundException::new);
-        } catch (NotFoundException e) {
-            throw new DataNotFoundException("Не удалось найти пользователя");
-        }
+        return repository.findById(id)
+                .map(mapper::toUser)
+                .orElseThrow(() -> new DataNotFoundException("Не удалось найти пользователя"));
     }
 
 

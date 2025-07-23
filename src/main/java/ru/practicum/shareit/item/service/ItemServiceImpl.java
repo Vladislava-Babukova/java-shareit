@@ -1,8 +1,8 @@
 package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.booking.controller.State;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.booking.storage.mapper.BookingRepositoryMapper;
@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ItemServiceProvider implements ItemService {
+public class ItemServiceImpl implements ItemService {
     private final ItemRepository repository;
     private final ItemRepositoryMapper mapper;
     private final UserService userService;
@@ -58,42 +58,29 @@ public class ItemServiceProvider implements ItemService {
 
     @Override
     public Item update(Item item, int itemId, int userId) {
-        try {
-            ItemEntity entity = repository.findById(itemId).orElseThrow(ChangeSetPersister.NotFoundException::new);
-            if (entity.getOwner().getId() != userId) {
-                throw new DataNotFoundException("Изменять item может только его создатель");
-            }
-            mapper.updateEntity(item, entity);
-            return mapper.toItem(repository.save(entity));
-        } catch (ChangeSetPersister.NotFoundException e) {
-            throw new DataNotFoundException("Не удалось найти item");
+        ItemEntity entity = repository.findById(itemId).orElseThrow(() -> new DataNotFoundException("Не удалось найти item"));
+        if (entity.getOwner().getId() != userId) {
+            throw new DataNotFoundException("Изменять item может только его создатель");
         }
+        mapper.updateEntity(item, entity);
+        return mapper.toItem(repository.save(entity));
     }
 
     @Override
     public ItemResponseDto getDto(int itemId) {
-        try {
-            Item item = repository.findById(itemId).map(mapper::toItem)
-                    .orElseThrow(ChangeSetPersister.NotFoundException::new);
+        Item item = repository.findById(itemId).map(mapper::toItem)
+                .orElseThrow(() -> new DataNotFoundException("Не удалось найти item"));
 
-            ItemResponseDto responseDto = controllerMapper.toResponse(item,
-                    getPastBookings(itemId), getFutureBookings(itemId),
-                    getComments(itemId));
-            return responseDto;
-        } catch (ChangeSetPersister.NotFoundException e) {
-            throw new DataNotFoundException("Не удалось найти item");
-        }
+        ItemResponseDto responseDto = controllerMapper.toResponse(item,
+                getPastBookings(itemId), getFutureBookings(itemId),
+                getComments(itemId));
+        return responseDto;
     }
 
     @Override
     public Item get(int itemId) {
-        try {
-            return repository.findById(itemId).map(mapper::toItem)
-                    .orElseThrow(ChangeSetPersister.NotFoundException::new);
-
-        } catch (ChangeSetPersister.NotFoundException e) {
-            throw new DataNotFoundException("Не удалось найти item");
-        }
+        return repository.findById(itemId).map(mapper::toItem)
+                .orElseThrow(() -> new DataNotFoundException("Не удалось найти item"));
     }
 
     @Override
@@ -116,7 +103,7 @@ public class ItemServiceProvider implements ItemService {
 
 
     public ForTimeBookingDto getPastBookings(int ownerId) {
-        List<Booking> pastBookings = bookingService.getAllBookings(ownerId, "PAST");
+        List<Booking> pastBookings = bookingService.getAllBookings(ownerId, State.PAST);
         if (pastBookings.isEmpty()) {
             return null;
         }
@@ -124,7 +111,7 @@ public class ItemServiceProvider implements ItemService {
     }
 
     public ForTimeBookingDto getFutureBookings(int ownerId) {
-        List<Booking> futureBookings = bookingService.getAllBookings(ownerId, "FUTURE");
+        List<Booking> futureBookings = bookingService.getAllBookings(ownerId, State.FUTURE);
         if (futureBookings.isEmpty()) {
             return null;
         }
@@ -138,13 +125,13 @@ public class ItemServiceProvider implements ItemService {
         return repository.findByOwnerId(userId).stream()
                 .map(mapper::toItem)
                 .map(item -> controllerMapper.toResponse(item, getPastBookings(item.getId()),
-                         getFutureBookings(item.getId()), getComments(item.getId())))
+                        getFutureBookings(item.getId()), getComments(item.getId())))
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<Item> searchItems(String text) {
-        if (text.isBlank()) {
+        if ((text == null) || text.isBlank()) {
             return new ArrayList<Item>();
         }
         List<ItemEntity> entities = repository
