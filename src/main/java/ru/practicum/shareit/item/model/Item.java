@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.model;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.shareit.user.model.User;
@@ -9,8 +10,7 @@ import ru.practicum.shareit.user.model.User;
 /**
  * TODO Sprint add-controllers.
  */
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 public class Item {
     private int id;
