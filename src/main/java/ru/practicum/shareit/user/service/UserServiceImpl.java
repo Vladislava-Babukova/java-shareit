@@ -2,6 +2,7 @@ package ru.practicum.shareit.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exceptions.ConflictException;
 import ru.practicum.shareit.exceptions.DataNotFoundException;
 import ru.practicum.shareit.exceptions.StorageException;
 import ru.practicum.shareit.user.model.User;
@@ -22,7 +23,7 @@ public class UserServiceImpl implements UserService {
         try {
             return mapper.toUser(repository.save(mapper.toEntity(user)));
         } catch (Exception e) {
-            throw new StorageException("Произошла ошибка при создании пользователя");
+            throw new ConflictException("Произошла ошибка при создании пользователя");
         }
     }
 
