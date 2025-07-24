@@ -60,7 +60,7 @@ public class ItemServiceImpl implements ItemService {
     public Item update(Item item, int itemId, int userId) {
         ItemEntity entity = repository.findById(itemId).orElseThrow(() -> new DataNotFoundException("Не удалось найти item"));
         if (entity.getOwner().getId() != userId) {
-            throw new DataNotFoundException("Изменять item может только его создатель");
+            throw new StorageException("Изменять item может только его создатель");
         }
         mapper.updateEntity(item, entity);
         return mapper.toItem(repository.save(entity));

@@ -52,9 +52,8 @@ public class BookingController {
     @GetMapping
     public List<BookingResponseDto> getAllBookings(
             @RequestHeader("X-Sharer-User-Id") int userId,
-            @RequestParam(name = "state", defaultValue = "ALL") String state) {
-        State bookingstate = State.from(state);
-        List<Booking> bookingList = service.getAllBookings(userId, bookingstate);
+            @RequestParam(name = "state", defaultValue = "ALL") State state) {
+        List<Booking> bookingList = service.getAllBookings(userId, state);
         return mapper.toResponseList(bookingList);
     }
 
