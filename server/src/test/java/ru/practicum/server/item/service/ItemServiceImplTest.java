@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.practicum.server.booking.model.Booking;
 import ru.practicum.server.booking.service.BookingService;
 import ru.practicum.server.booking.storage.entity.BookingEntity;
+import ru.practicum.server.booking.storage.mapper.BookingRepositoryMapper;
 import ru.practicum.server.booking.storage.repository.BookingRepository;
 import ru.practicum.server.exceptions.StorageException;
 import ru.practicum.server.exceptions.ValidationException;
@@ -65,6 +66,9 @@ class ItemServiceImplTest {
     @Mock
     private ItemRepositoryMapper repositoryMapper;
 
+    @Mock
+    private BookingRepositoryMapper bookingMapper;
+
 
     @InjectMocks
     private ItemServiceImpl itemService;
@@ -77,6 +81,7 @@ class ItemServiceImplTest {
     private BookingEntity bookingEntity;
     private UserEntity userEntity;
     private CommentEntity commentEntity;
+
 
     @BeforeEach
     void setUp() {
@@ -170,14 +175,14 @@ class ItemServiceImplTest {
     @Test
     void update_ShouldThrowExceptionWhenUserIsNotOwner() {
         UserEntity ownerEntity = new UserEntity();
-        ownerEntity.setId(1); // Другой ID владельца
+        ownerEntity.setId(1);
         ownerEntity.setName("Owner");
         itemEntity.setOwner(ownerEntity);
 
         when(repository.findById(anyInt())).thenReturn(Optional.of(itemEntity));
 
         assertThrows(StorageException.class,
-                () -> itemService.update(item, item.getId(), 999)); // Передаем ID другого пользователя
+                () -> itemService.update(item, item.getId(), 999));
     }
 
     @Test
@@ -210,11 +215,24 @@ class ItemServiceImplTest {
         when(userService.get(anyInt())).thenReturn(user);
         when(repository.findById(anyInt())).thenReturn(Optional.of(itemEntity));
         when(repositoryMapper.toItem(any(ItemEntity.class))).thenReturn(item);
-        when(bookingRepository.findByItemIdAndBookerIdAndEndBefore(anyInt(), anyInt(), any()))
-                .thenReturn(Collections.emptyList());
+        when(bookingRepository.findByItemIdAndBookerIdAndEndBefore(
+                anyInt(),
+                anyInt(),
+                any(LocalDateTime.class)
+        )).thenReturn(Collections.emptyList());
+
+        when(bookingMapper.toBookingList(anyList())).thenReturn(Collections.emptyList());
+
 
         assertThrows(ValidationException.class,
                 () -> itemService.createComment(comment, user.getId(), item.getId()));
+
+
+        verify(bookingRepository).findByItemIdAndBookerIdAndEndBefore(
+                eq(item.getId()),
+                eq(user.getId()),
+                any(LocalDateTime.class)
+        );
     }
 
     @Test

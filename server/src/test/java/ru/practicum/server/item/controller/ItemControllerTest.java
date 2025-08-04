@@ -120,7 +120,7 @@ class ItemControllerTest {
         int userId = 1;
         int itemId = 1;
         CommentCreateDto createDto = new CommentCreateDto();
-        Comment comment = new Comment(); // модель
+        Comment comment = new Comment();
         CommentResponseDto expectedDto = new CommentResponseDto();
         when(itemMapper.toComment(createDto)).thenReturn(comment);
         when(itemService.createComment(comment, userId, itemId)).thenReturn(comment);
