@@ -12,7 +12,7 @@ import ru.practicum.server.user.storage.mapper.UserRepositoryMapper;
 import java.util.List;
 
 @Mapper(componentModel = "spring",
-        implementationName = "bookingRepositoryMapperImpl",
+        implementationName = "BookingRepositoryMapperImpl",
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         uses = {UserRepositoryMapper.class, ItemRepositoryMapper.class})
 public interface BookingRepositoryMapper {

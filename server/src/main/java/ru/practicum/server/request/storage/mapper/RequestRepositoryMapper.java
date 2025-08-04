@@ -10,7 +10,7 @@ import ru.practicum.server.request.storage.entity.RequestEntity;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", implementationName = "requestStorageMapperImpl")
+@Mapper(componentModel = "spring", implementationName = "RequestStorageMapperImpl")
 public interface RequestRepositoryMapper {
     ItemRequest toRequest(RequestEntity requestEntity);
 

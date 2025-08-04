@@ -40,7 +40,7 @@ class BookingMapperTest {
 
     @Spy
     @InjectMocks
-    private bookingControllerMapperImpl bookingMapper;
+    private BookingControllerMapperImpl bookingMapper;
 
     @Test
     void toBooking_ShouldMapCorrectly() {

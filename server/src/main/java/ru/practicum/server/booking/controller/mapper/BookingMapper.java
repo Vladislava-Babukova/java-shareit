@@ -14,7 +14,7 @@ import ru.practicum.server.user.controller.mapper.UserMapper;
 import java.util.List;
 
 @Mapper(componentModel = "spring",
-        implementationName = "bookingControllerMapperImpl",
+        implementationName = "BookingControllerMapperImpl",
         uses = {ItemMapper.class, UserMapper.class})
 public interface BookingMapper {
     @Mapping(target = "item", source = "itemId")

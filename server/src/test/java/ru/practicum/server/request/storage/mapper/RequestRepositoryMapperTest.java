@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class RequestRepositoryMapperTest {
 
     @InjectMocks
-    private requestStorageMapperImpl requestRepositoryMapper;
+    private RequestStorageMapperImpl requestRepositoryMapper;
 
     @Test
     void toRequest_ShouldMapCorrectlyFromEntity() {

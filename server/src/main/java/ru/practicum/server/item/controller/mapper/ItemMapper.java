@@ -10,7 +10,7 @@ import ru.practicum.server.request.model.ItemRequest;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", implementationName = "itemControllerMapperImpl")
+@Mapper(componentModel = "spring", implementationName = "ItemControllerMapperImpl")
 public interface ItemMapper {
 
     @Mapping(target = "request", source = "requestId")

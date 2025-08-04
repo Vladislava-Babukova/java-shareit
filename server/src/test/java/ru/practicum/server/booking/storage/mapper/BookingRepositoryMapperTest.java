@@ -30,7 +30,7 @@ class BookingRepositoryMapperTest {
     private ItemRepositoryMapper itemRepositoryMapper;
 
     @InjectMocks
-    private bookingRepositoryMapperImpl bookingRepositoryMapper;
+    private BookingRepositoryMapperImpl bookingRepositoryMapper;
 
     @Test
     void toBooking_ShouldMapCorrectly() {

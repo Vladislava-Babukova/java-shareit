@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class RequestMapperTest {
 
     @InjectMocks
-    private requestControllerMapperImpl requestMapper;
+    private RequestControllerMapperImpl requestMapper;
 
     @Test
     void toRequest_ShouldMapCorrectlyFromExternalDto() {
