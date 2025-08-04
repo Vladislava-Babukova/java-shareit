@@ -8,7 +8,7 @@ import ru.practicum.server.user.controller.dto.UserDto;
 import ru.practicum.server.user.model.User;
 
 @Mapper(componentModel = "spring",
-        implementationName = "userControllerMapperImpl")
+        implementationName = "UserControllerMapperImpl")
 public interface UserMapper {
 
     @Mapping(target = "id", source = "id")

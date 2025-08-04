@@ -8,7 +8,7 @@ import ru.practicum.server.user.model.User;
 import ru.practicum.server.user.storage.entity.UserEntity;
 
 @Mapper(componentModel = "spring",
-        implementationName = "userRepositoryMapperImpl",
+        implementationName = "UserRepositoryMapperImpl",
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface UserRepositoryMapper {
 
